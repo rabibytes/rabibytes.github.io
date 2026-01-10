@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Build & Host This Website - RabiBytes</title>
+    <meta name="description" content="A step-by-step tutorial on building this specific portfolio website and hosting it on GitHub Pages.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Network Grid Background -->
+    <canvas id="network-canvas"></canvas>
+
+    <header class="site-header">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none;">
+                    <span class="logo-rabi">Rabi</span><span class="logo-bytes">Bytes</span>
+                </a>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="#connect" class="nav-link">Connect</a></li>
+                </ul>
+            </nav>
+
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="blog-wrapper">
+        <article class="blog-container">
+            <a href="index.html#videos" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Content
+            </a>
+            
+            <header class="blog-header">
+                <h1 class="blog-title">How to Build & Host This Website</h1>
+                <div class="blog-meta">
+                    <span class="date">October 26, 2025</span> &bull; <span class="author">By Rabi Ibrahim</span>
+                </div>
+            </header>
+
+            <div class="article-content">
+                <p>
+                    Have you ever wanted to create a sleek, professional portfolio or landing page but didn't know where to start? 
+                    In this tutorial, I'll walk you through exactly how I built the RabiBytes website using vanilla HTML, CSS, and JavaScript, 
+                    and how you can host it for free using GitHub Pages.
+                </p>
+
+                <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1000&auto=format&fit=crop&q=80" alt="Coding Setup" class="article-img" loading="lazy">
+
+                <h2>Step 1: Setting Up the Structure (HTML)</h2>
+                <p>
+                    HTML (HyperText Markup Language) is the backbone of any website. For this project, we need a clean structure consisting of a 
+                    Header (navigation), a Main area (Hero, Gallery, About), and a Footer.
+                </p>
+                <p>Here is the skeleton of our <code>index.html</code>:</p>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;title&gt;RabiBytes&lt;/title&gt;
+    &lt;link rel="stylesheet" href="index.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;...&lt;/header&gt;
+    &lt;main&gt;
+        &lt;section id="hero"&gt;...&lt;/section&gt;
+        &lt;section id="videos"&gt;...&lt;/section&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;...&lt;/footer&gt;
+    &lt;script src="index.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+                <h2>Step 2: Styling with Modern CSS</h2>
+                <p>
+                    To achieve the "Dark Tech" aesthetic, we use CSS Variables for color management and Flexbox/Grid for layout.
+                    Crucially, we use a mobile-first approach.
+                </p>
+                <p>Define your variables at the root:</p>
+                <pre><code>:root {
+    --bg-dark: #121212;
+    --primary: #0ea5e9;
+    --accent: #84cc16;
+    --text-main: #ffffff;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+}</code></pre>
+
+                <h2>Step 3: Adding Interactivity (JavaScript)</h2>
+                <p>
+                    Instead of hardcoding every video card in HTML, we use JavaScript to generate them dynamically. This makes adding new content 
+                    as easy as adding an item to an array.
+                </p>
+                <pre><code>const videos = [
+    { title: "My Video", url: "..." },
+    { title: "Another Video", url: "..." }
+];
+
+const gallery = document.getElementById('video-gallery');
+// Map through data and inject HTML
+gallery.innerHTML = videos.map(v => `...`).join('');</code></pre>
+
+                <h2>Step 4: Hosting on GitHub Pages</h2>
+                <p>
+                    This is the best part—hosting is completely free!
+                </p>
+                <ol>
+                    <li>Create a GitHub account.</li>
+                    <li>Create a new repository named <code>username.github.io</code>.</li>
+                    <li>Upload your <code>index.html</code>, <code>index.css</code>, and <code>index.js</code> files.</li>
+                    <li>Go to <strong>Settings > Pages</strong> and ensure the source is set to the main branch.</li>
+                </ol>
+                <p>
+                    That's it! Your site will be live at <code>https://username.github.io</code> in minutes.
+                </p>
+
+                <h2>Conclusion</h2>
+                <p>
+                    Building a static site doesn't require complex frameworks. With just three files, we've created a responsive, 
+                    performant, and good-looking landing page. Happy coding!
+                </p>
+            </div>
+        </article>
+    </main>
+
+    <footer id="connect">
+        <div class="container footer-grid">
+            <!-- Column 1: Brand & Bio -->
+            <div class="footer-col brand-col">
+                <div class="footer-logo">
+                    <span class="logo-rabi">Rabi</span><span class="logo-bytes">Bytes</span>
+                </div>
+                <p class="footer-desc">
+                    Bridging the gap between academic theory and real-world production systems.
+                </p>
+                <div class="social-links footer-socials">
+                    <a href="https://www.youtube.com/@RabiBytes" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/in/rabiibrahim/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/rabiibrahim" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div class="footer-col">
+                <h4 class="footer-heading">Quick Links</h4>
+                <ul class="footer-nav">
+                    <li><a href="index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="#connect" class="nav-link">Connect</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Resources -->
+            <div class="footer-col">
+                <h4 class="footer-heading">Resources</h4>
+                <ul class="footer-nav">
+                    <li><a href="https://github.com/rabiibrahim" target="_blank">GitHub Repos</a></li>
+                    <li><a href="https://rabiibrahim.github.io/" target="_blank">Portfolio</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer Bottom Bar -->
+        <div class="footer-bottom">
+            <div class="container footer-bottom-content">
+                <p class="copyright">
+                    &copy; 2026 RabiBytes. All rights reserved.
+                </p>
+                <p class="made-with">
+                    Crafted with &hearts; for the Tech Community
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scroll-to-top" class="btn-scroll-top" aria-label="Scroll to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="index.js"></script>
+</body>
+</html>

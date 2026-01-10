@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RabiBytes - Byte-sized Tech Knowledge</title>
+    <meta name="description" content="Exploring technology, coding, and software development.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Inter for English, Cairo for Arabic -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- Network Grid Background -->
+    <canvas id="network-canvas"></canvas>
+
+    <header class="site-header">
+        <div class="container nav-container">
+            <div class="logo">
+                <span class="logo-rabi">Rabi</span><span class="logo-bytes">Bytes</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="#home" class="nav-link" data-i18n="nav-home">Home</a></li>
+                    <li><a href="#videos" class="nav-link" data-i18n="nav-videos">Videos</a></li>
+                    <li><a href="#about" class="nav-link" data-i18n="nav-about">About</a></li>
+                    <li><a href="#connect" class="nav-link" data-i18n="nav-connect">Connect</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button id="lang-toggle" class="btn-lang" aria-label="Toggle Language">
+                    <span class="lang-text">عربي</span>
+                    <i class="fas fa-globe"></i>
+                </button>
+
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HOME VIEW WRAPPER -->
+        <div id="home-view">
+            <!-- Hero Section -->
+            <section id="home" class="hero">
+                <div class="container hero-content">
+                    <h1 data-i18n="hero-title">Practical <span class="text-primary">Tech Knowledge</span></h1>
+                    <p class="hero-sub" data-i18n="hero-sub">Exploring <span class="text-highlight">technology</span>, <span class="text-highlight">coding</span>, and <span class="text-highlight">software development</span>.</p>
+                    <a href="https://www.youtube.com/@RabiBytes?sub_confirmation=1" target="_blank" class="btn btn-youtube">
+                        <i class="fab fa-youtube"></i> <span data-i18n="btn-subscribe">Subscribe</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Video Gallery -->
+            <section id="videos" class="videos-section">
+                <div class="container">
+                    <h2 class="section-title" data-i18n="section-latest">Latest <span class="text-accent">Content</span></h2>
+                    <div id="video-gallery" class="video-grid">
+                        <!-- Javascript will populate this -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="about-section">
+                <div class="container">
+                    <h2 class="section-title" data-i18n="section-meet">Meet the <span class="text-primary">Host</span></h2>
+                    
+                    <div class="about-grid">
+                        <!-- Profile / Presenter Image Side -->
+                        <div class="about-image-wrapper">
+                            <!-- Robust Image Loading: Tries .jpg, then .png, then .jpeg, then placeholder -->
+                            <img 
+                                src="Rabi-Profile.jpg" 
+                                onerror="
+                                    const alts = ['rabi-profile.png', 'rabi-profile.jpeg', 'Rabi-Profile.jpg'];
+                                    const idx = parseInt(this.getAttribute('data-err') || '0');
+                                    if (idx < alts.length) {
+                                        this.src = alts[idx];
+                                        this.setAttribute('data-err', idx + 1);
+                                    } else {
+                                        this.src = 'https://placehold.co/600x800/1a1a1a/0ea5e9?text=Rabi+Ibrahim';
+                                        this.onerror = null;
+                                    }
+                                " 
+                                alt="Rabi Ibrahim" 
+                                class="about-profile-img"
+                                loading="lazy"
+                            >
+                            <div class="presenter-badge">
+                                <i class="fas fa-microphone-lines"></i> <span data-i18n="badge-host">Host & Presenter</span>
+                            </div>
+                        </div>
+
+                        <!-- Bio Content Side -->
+                        <div class="about-content-wrapper">
+                            <h3 data-i18n="host-name">Rabi Ibrahim</h3>
+                            <p class="role-title" data-i18n="host-role">Software Engineer & Content Creator</p>
+                            
+                            <p class="about-bio" data-i18n="bio-1">
+                                Welcome to RabiBytes! I'm a passionate software engineer who views engineering not just as a job, but as a craft.
+                            </p>
+                            <p class="about-bio" data-i18n="bio-2">
+                                My mission is to bridge the gap between academic theory and real-world, high-scale production systems. Focused on empowering the Arabic tech region, I break down complex concepts into digestible, byte-sized lessons to help you master the art of software development.
+                            </p>
+                            
+                            <div class="about-actions">
+                                <a href="https://rabiibrahim.github.io/" target="_blank" class="btn btn-outline">
+                                    <i class="fas fa-globe"></i> <span data-i18n="btn-portfolio">Visit Portfolio</span>
+                                </a>
+                                <a href="https://www.linkedin.com/in/rabiibrahim/" target="_blank" class="social-text-link">
+                                    <i class="fab fa-linkedin"></i> <span data-i18n="btn-linkedin">Connect on LinkedIn</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- BLOG VIEW WRAPPER (Generic Template) -->
+        <article id="blog-view" class="blog-wrapper hidden">
+            <div class="blog-container">
+                <a href="#videos" class="back-link back-link-action">
+                    <i class="fas fa-arrow-left flip-icon"></i> <span data-i18n="btn-back">Back to Content</span>
+                </a>
+                
+                <header class="blog-header">
+                    <h1 id="blog-title" class="blog-title"><!-- Dynamic Title --></h1>
+                    <div class="blog-meta">
+                        <span id="blog-date" class="date"><!-- Dynamic Date --></span> &bull; <span id="blog-author" class="author"></span>
+                    </div>
+                </header>
+
+                <!-- Hero Image for Blog -->
+                <img id="blog-hero-image" src="" alt="" class="article-img hidden">
+
+                <div id="blog-body" class="article-content">
+                    <!-- Dynamic HTML Content -->
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer id="connect">
+        <div class="container footer-grid">
+            <!-- Column 1: Brand & Bio -->
+            <div class="footer-col brand-col">
+                <div class="footer-logo">
+                    <span class="logo-rabi">Rabi</span><span class="logo-bytes">Bytes</span>
+                </div>
+                <p class="footer-desc" data-i18n="footer-desc">
+                    Bridging the gap between academic theory and real-world production systems.
+                </p>
+                <div class="social-links footer-socials">
+                    <a href="https://www.youtube.com/@RabiBytes" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/in/rabiibrahim/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/rabiibrahim" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div class="footer-col">
+                <h4 class="footer-heading" data-i18n="footer-links">Quick Links</h4>
+                <ul class="footer-nav">
+                    <li><a href="#home" class="nav-link" data-i18n="nav-home">Home</a></li>
+                    <li><a href="#videos" class="nav-link" data-i18n="nav-videos">Videos</a></li>
+                    <li><a href="#about" class="nav-link" data-i18n="nav-about">About</a></li>
+                    <li><a href="#connect" class="nav-link" data-i18n="nav-connect">Connect</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Resources -->
+            <div class="footer-col">
+                <h4 class="footer-heading" data-i18n="footer-resources">Resources</h4>
+                <ul class="footer-nav">
+                    <li><a href="https://github.com/rabiibrahim" target="_blank" data-i18n="footer-github">GitHub Repos</a></li>
+                    <li><a href="https://rabiibrahim.github.io/" target="_blank" data-i18n="btn-portfolio">Portfolio</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer Bottom Bar -->
+        <div class="footer-bottom">
+            <div class="container footer-bottom-content">
+                <p class="copyright" data-i18n="footer-copyright">
+                    &copy; 2026 RabiBytes. All rights reserved.
+                </p>
+                <p class="made-with" data-i18n="footer-made">
+                    Crafted with &hearts; for the Tech Community
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scroll-to-top" class="btn-scroll-top" aria-label="Scroll to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="index.js"></script>
+</body>
+</html>
