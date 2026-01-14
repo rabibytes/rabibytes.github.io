@@ -6,7 +6,7 @@ const translations = {
         "nav-about": "About",
         "nav-connect": "Connect",
         "hero-title": "Practical <span class='text-primary'>Tech Knowledge</span>",
-        "hero-sub": "Exploring <span class='text-highlight'>technology</span>, <span class='text-highlight'>coding</span>, and <span class='text-highlight'>software development</span>.",
+        "hero-sub": "Exploring <span class='text-highlight'>technology</span>, <span class='text-highlight'>coding</span>, <span class='text-highlight'>software development</span>, and <span class='text-highlight'>real-life experience</span>.",
         "btn-subscribe": "Subscribe",
         "section-latest": "Latest <span class='text-accent'>Content</span>",
         "section-meet": "Meet the <span class='text-primary'>Host</span>",
@@ -32,7 +32,7 @@ const translations = {
         "nav-about": "نبذة عني",
         "nav-connect": "تواصل",
         "hero-title": "معرفة تقنية <span class='text-primary'>عملية</span>",
-        "hero-sub": "استكشاف <span class='text-highlight'>التكنولوجيا</span>، <span class='text-highlight'>البرمجة</span>، و <span class='text-highlight'>تطوير البرمجيات</span>.",
+        "hero-sub": "استكشاف <span class='text-highlight'>التكنولوجيا</span>، <span class='text-highlight'>البرمجة</span>، <span class='text-highlight'>تطوير البرمجيات</span>، و <span class='text-highlight'>الخبرات الواقعية</span>.",
         "btn-subscribe": "اشترك الآن",
         "section-latest": "أحدث <span class='text-accent'>المحتوى</span>",
         "section-meet": "تعرف على <span class='text-primary'>المضيف</span>",
@@ -409,13 +409,20 @@ const app = {
         let width, height;
         let particles = [];
 
-        const particleCount = 80;
+        // Optimization: Reduce particle density on smaller screens
+        const getParticleCount = () => window.innerWidth < 768 ? 35 : 80;
         const connectionDistance = 150; 
         const primaryColorRGB = '14, 165, 233'; 
         
+        // Optimization: Throttle frame rate to ~30 FPS
+        const targetFPS = 30;
+        const frameInterval = 1000 / targetFPS;
+        let lastDrawTime = 0;
+
         const resize = () => {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
+            initParticles();
         };
 
         class Particle {
@@ -430,6 +437,8 @@ const app = {
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
+                
+                // Bounce off edges
                 if (this.x < 0 || this.x > width) this.vx *= -1;
                 if (this.y < 0 || this.y > height) this.vy *= -1;
             }
@@ -444,23 +453,42 @@ const app = {
 
         const initParticles = () => {
             particles = [];
-            for (let i = 0; i < particleCount; i++) {
+            const count = getParticleCount();
+            for (let i = 0; i < count; i++) {
                 particles.push(new Particle());
             }
         };
 
-        const animate = () => {
+        const animate = (timestamp) => {
+            requestAnimationFrame(animate);
+
+            // Throttle FPS
+            const elapsed = timestamp - lastDrawTime;
+            if (elapsed < frameInterval) return;
+
+            lastDrawTime = timestamp - (elapsed % frameInterval);
+
             ctx.clearRect(0, 0, width, height);
-            particles.forEach((p, index) => {
+            
+            // Use for loops for better performance
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
                 p.update();
                 p.draw();
-                for (let j = index + 1; j < particles.length; j++) {
+                
+                for (let j = i + 1; j < particles.length; j++) {
                     const p2 = particles[j];
                     const dx = p.x - p2.x;
                     const dy = p.y - p2.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Quick bounding box check to avoid expensive sqrt
+                    if (Math.abs(dx) > connectionDistance || Math.abs(dy) > connectionDistance) continue;
 
-                    if (distance < connectionDistance) {
+                    const distanceSq = dx * dx + dy * dy;
+                    const connectionDistanceSq = connectionDistance * connectionDistance;
+
+                    if (distanceSq < connectionDistanceSq) {
+                        const distance = Math.sqrt(distanceSq);
                         const opacity = 1 - (distance / connectionDistance);
                         ctx.beginPath();
                         ctx.strokeStyle = `rgba(${primaryColorRGB}, ${opacity * 0.4})`; 
@@ -470,17 +498,21 @@ const app = {
                         ctx.stroke();
                     }
                 }
-            });
-            requestAnimationFrame(animate);
+            }
         };
 
+        // Debounce Resize
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            resize();
-            initParticles();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(resize, 200);
         });
-        resize();
+        
+        // Init
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
         initParticles();
-        animate();
+        requestAnimationFrame(animate);
     }
 };
 
