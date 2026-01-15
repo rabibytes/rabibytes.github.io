@@ -27,6 +27,19 @@ body {
     color: var(--text-main);
     font-family: var(--font-family);
     line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Scroll Progress Bar */
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    z-index: 2000;
+    transition: width 0.1s ease-out;
 }
 
 /* RTL / Arabic Support */
@@ -34,6 +47,11 @@ html[lang="ar"] body {
     font-family: var(--font-family-ar);
     direction: rtl;
     text-align: right;
+}
+
+html[lang="ar"] #scroll-progress {
+    left: auto;
+    right: 0;
 }
 
 /* Directional utility for flipping icons in RTL */
@@ -72,6 +90,7 @@ ul {
     list-style: none;
 }
 
+/* Animations */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -87,6 +106,18 @@ ul {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+}
+
+/* Scroll Reveal Animation Classes */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 section, footer {
@@ -125,6 +156,7 @@ section, footer {
     cursor: pointer;
     display: flex;
     align-items: center;
+    gap: 12px;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     /* Brand Identity Preservation */
     font-family: var(--font-family) !important;
@@ -134,6 +166,12 @@ section, footer {
 
 .logo:hover {
     transform: scale(1.05);
+}
+
+.logo-img {
+    width: 40px;
+    height: 40px;
+    display: block;
 }
 
 .logo-rabi {
@@ -168,10 +206,31 @@ section, footer {
     color: var(--text-muted);
     font-size: 0.95rem;
     font-weight: 500;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: var(--accent);
+    transition: width 0.3s ease;
 }
 
 .nav-link:hover {
-    color: var(--accent);
+    color: var(--text-main);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+html[lang="ar"] .nav-link::after {
+    left: auto;
+    right: 0;
 }
 
 /* Header Actions (Language + Hamburger) */
@@ -248,8 +307,6 @@ section, footer {
     line-height: 1.1;
     letter-spacing: -0.03em;
     text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 html[lang="ar"] .hero h1 {
@@ -276,8 +333,6 @@ html[lang="ar"] .hero h1 {
     margin-left: auto;
     margin-right: auto;
     text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    opacity: 0;
-    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards;
     line-height: 1.8;
 }
 
@@ -296,8 +351,6 @@ html[lang="ar"] .hero h1 {
 }
 
 .hero .btn-youtube {
-    opacity: 0;
-    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s forwards;
     box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
 }
 
@@ -362,11 +415,49 @@ html[lang="ar"] .hero h1 {
     background-color: var(--bg-dark);
 }
 
+.section-header {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
 .section-title {
     font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: 4rem;
-    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Filter Buttons */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    padding: 8px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary);
+    color: var(--text-main);
+}
+
+.filter-btn.active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
 }
 
 .video-grid {
@@ -389,6 +480,11 @@ html[lang="ar"] .hero h1 {
     cursor: pointer;
     position: relative;
     z-index: 1;
+}
+
+/* For filtering animation */
+.video-card.hidden {
+    display: none;
 }
 
 .video-card:hover {
@@ -458,11 +554,34 @@ html[lang="ar"] .video-content {
     text-align: right;
 }
 
+.video-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.video-tag:hover {
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(132, 204, 22, 0.5);
+    transform: translateX(4px);
+}
+
+html[lang="ar"] .video-tag:hover {
+    transform: translateX(-4px);
+}
+
 .video-title {
     font-size: 1.25rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
     color: var(--text-main);
+    line-height: 1.4;
 }
 
 .video-description {
@@ -741,6 +860,16 @@ footer {
 .footer-logo {
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+}
+
+/* Updated selector to handle both img (fallback) and svg */
+.footer-logo .logo-img {
+    width: 35px;
+    height: 35px;
 }
 
 .footer-desc {

@@ -9,6 +9,9 @@ const translations = {
         "hero-sub": "Exploring <span class='text-highlight'>technology</span>, <span class='text-highlight'>coding</span>, <span class='text-highlight'>software development</span>, and <span class='text-highlight'>real-life experience</span>.",
         "btn-subscribe": "Subscribe",
         "section-latest": "Latest <span class='text-accent'>Content</span>",
+        "filter-all": "All",
+        "filter-tutorials": "Tutorials",
+        "filter-theory": "Theory",
         "section-meet": "Meet the <span class='text-primary'>Host</span>",
         "badge-host": "Host & Presenter",
         "host-name": "Rabi Ibrahim",
@@ -35,6 +38,9 @@ const translations = {
         "hero-sub": "استكشاف <span class='text-highlight'>التكنولوجيا</span>، <span class='text-highlight'>البرمجة</span>، <span class='text-highlight'>تطوير البرمجيات</span>، و <span class='text-highlight'>الخبرات الواقعية</span>.",
         "btn-subscribe": "اشترك الآن",
         "section-latest": "أحدث <span class='text-accent'>المحتوى</span>",
+        "filter-all": "الكل",
+        "filter-tutorials": "شروحات",
+        "filter-theory": "نظري",
         "section-meet": "تعرف على <span class='text-primary'>المضيف</span>",
         "badge-host": "مضيف ومقدم",
         "host-name": "ربيع إبراهيم",
@@ -59,6 +65,20 @@ const translations = {
 // 1. Gallery Items
 const videos = [
     {
+        title: {
+            en: "Introduction to RabiBytes",
+            ar: "مقدمة في RabiBytes"
+        },
+        description: {
+            en: "Welcome to the channel! Join me on a journey to bridge the gap between academic theory and real-world software engineering.",
+            ar: "أهلاً بك في القناة! انضم إلي في رحلة لسد الفجوة بين النظرية الأكاديمية وهندسة البرمجيات الواقعية."
+        },
+        thumbnail: "https://img.youtube.com/vi/AtwFyrwOtwM/maxresdefault.jpg",
+        internalId: null,
+        url: "https://www.youtube.com/watch?v=AtwFyrwOtwM",
+        category: "theory"
+    },
+    {
         // localized content
         title: {
             en: "How to Build & Host This Website",
@@ -70,13 +90,12 @@ const videos = [
         },
         thumbnail: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
         internalId: "build-website", 
-        url: "#" 
+        url: "#",
+        category: "tutorial"
     }
 ];
 
 // 2. Blog Posts
-// Note: For full blog translation, we'd need 'body' in both languages. 
-// For this demo, I'm duplicating the object structure or just checking lang in logic.
 const blogPosts = {
     "build-website": {
         date: { en: "October 26, 2025", ar: "26 أكتوبر 2025" },
@@ -172,6 +191,8 @@ const blogPosts = {
 const app = {
     // Current Language state
     lang: localStorage.getItem('rabi-lang') || 'en',
+    // Current active filter
+    currentFilter: 'all',
 
     init: () => {
         app.updateLanguage(app.lang); // Apply initial lang
@@ -180,6 +201,9 @@ const app = {
         app.setupNavigation();
         app.setupLanguageToggle();
         app.setupScrollToTop();
+        app.setupFilters();
+        app.setupScrollAnimations();
+        app.setupReadingProgress();
         app.initNetworkAnimation();
     },
 
@@ -190,13 +214,8 @@ const app = {
         app.renderVideos(); // Re-render dynamic content
         
         // If viewing a blog post, reload it in new lang
-        // This is a simplified check; usually we store currentView state
         const blogView = document.getElementById('blog-view');
         if (blogView && !blogView.classList.contains('hidden')) {
-             const title = document.getElementById('blog-title').textContent;
-             // Find ID by matching EN title (rough approach) or store currentPostId in app state
-             // For safety, just go home or stay if possible.
-             // Ideally: app.currentPostId would exist.
              if(app.currentPostId) app.renderBlog(app.currentPostId);
         }
     },
@@ -211,7 +230,6 @@ const app = {
         elements.forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (translations[lang][key]) {
-                // Use innerHTML to preserve spans inside translations
                 el.innerHTML = translations[lang][key];
             }
         });
@@ -247,21 +265,36 @@ const app = {
         });
     },
 
-    // Renders the cards on the homepage
+    setupFilters: () => {
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all
+                buttons.forEach(b => b.classList.remove('active'));
+                // Add to current
+                btn.classList.add('active');
+                
+                app.currentFilter = btn.getAttribute('data-filter');
+                app.renderVideos();
+            });
+        });
+    },
+
+    // Renders the cards on the homepage based on current filter
     renderVideos: () => {
         const gallery = document.getElementById('video-gallery');
         if (!gallery) return;
 
-        gallery.innerHTML = videos.map(video => {
+        const filteredVideos = app.currentFilter === 'all' 
+            ? videos 
+            : videos.filter(v => v.category === app.currentFilter);
+
+        gallery.innerHTML = filteredVideos.map(video => {
             const isInternal = !!video.internalId;
             const href = isInternal ? `#post-${video.internalId}` : video.url;
             const targetAttr = isInternal ? '' : 'target="_blank"'; 
             
             const iconClass = isInternal ? 'fa-file-lines' : 'fa-play'; 
-            
-            // RTL specific margin handling for icon is handled by CSS (margin-inline-start/end) 
-            // but inline styles were used previously. Let's fix that.
-            // Old: style="${iconStyle}". We remove inline style and rely on CSS/flex gap.
             
             const linkClass = isInternal ? 'video-card internal-link' : 'video-card';
             const dataId = isInternal ? `data-id="${video.internalId}"` : '';
@@ -269,6 +302,9 @@ const app = {
             // Localized text
             const title = video.title[app.lang];
             const description = video.description[app.lang];
+            
+            // Map category for display (simplified logic, could be localized too)
+            const catDisplay = video.category ? `<span class="video-tag">${video.category}</span>` : '';
 
             return `
             <a href="${href}" ${targetAttr} class="${linkClass}" ${dataId}>
@@ -279,6 +315,7 @@ const app = {
                     </div>
                 </div>
                 <div class="video-content">
+                    ${catDisplay}
                     <h3 class="video-title">${title}</h3>
                     <p class="video-description">${description}</p>
                 </div>
@@ -323,6 +360,8 @@ const app = {
         document.getElementById('home-view').classList.remove('hidden');
         document.getElementById('blog-view').classList.add('hidden');
         app.currentPostId = null;
+        // Trigger scroll observer check again
+        setTimeout(app.checkScrollAnimations, 100);
     },
 
     showBlogView: () => {
@@ -399,6 +438,49 @@ const app = {
                 }
             });
         }
+    },
+
+    // --- New Enhancement: Scroll Reveal Animations ---
+    setupScrollAnimations: () => {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Stop observing once revealed
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements with .reveal class
+        const els = document.querySelectorAll('.reveal');
+        els.forEach(el => observer.observe(el));
+    },
+    
+    // Helper to re-trigger check if content changes
+    checkScrollAnimations: () => {
+        const els = document.querySelectorAll('.reveal:not(.active)');
+        if(els.length > 0) {
+            app.setupScrollAnimations();
+        }
+    },
+
+    // --- New Enhancement: Reading Progress Bar ---
+    setupReadingProgress: () => {
+        const progressBar = document.getElementById('scroll-progress');
+        if (!progressBar) return;
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
     },
 
     initNetworkAnimation: () => {

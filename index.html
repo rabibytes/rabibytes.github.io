@@ -38,13 +38,16 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress"></div>
+
     <!-- Network Grid Background -->
     <canvas id="network-canvas"></canvas>
 
     <header class="site-header">
         <div class="container nav-container">
             <div class="logo">
-                <span class="logo-rabi">Rabi</span><span class="logo-bytes">Bytes</span>
+                <span class="logo-text"><span class="logo-rabi">Rabi</span><span class="logo-bytes">Bytes</span></span>
             </div>
             
             <nav class="nav-menu">
@@ -74,7 +77,7 @@
         <div id="home-view">
             <!-- Hero Section -->
             <section id="home" class="hero">
-                <div class="container hero-content">
+                <div class="container hero-content reveal">
                     <h1 data-i18n="hero-title">Practical <span class="text-primary">Tech Knowledge</span></h1>
                     <p class="hero-sub" data-i18n="hero-sub">Exploring <span class="text-highlight">technology</span>, <span class="text-highlight">coding</span>, <span class="text-highlight">software development</span>, and <span class="text-highlight">real-life experience</span>.</p>
                     <a href="https://www.youtube.com/@RabiBytes?sub_confirmation=1" target="_blank" class="btn btn-youtube">
@@ -86,8 +89,18 @@
             <!-- Video Gallery -->
             <section id="videos" class="videos-section">
                 <div class="container">
-                    <h2 class="section-title" data-i18n="section-latest">Latest <span class="text-accent">Content</span></h2>
-                    <div id="video-gallery" class="video-grid">
+                    <div class="section-header reveal">
+                        <h2 class="section-title" data-i18n="section-latest">Latest <span class="text-accent">Content</span></h2>
+                        
+                        <!-- Filter Buttons -->
+                        <div class="filter-container">
+                            <button class="filter-btn active" data-filter="all" data-i18n="filter-all">All</button>
+                            <button class="filter-btn" data-filter="tutorial" data-i18n="filter-tutorials">Tutorials</button>
+                            <button class="filter-btn" data-filter="theory" data-i18n="filter-theory">Theory</button>
+                        </div>
+                    </div>
+
+                    <div id="video-gallery" class="video-grid reveal">
                         <!-- Javascript will populate this -->
                     </div>
                 </div>
@@ -96,9 +109,9 @@
             <!-- About Section -->
             <section id="about" class="about-section">
                 <div class="container">
-                    <h2 class="section-title" data-i18n="section-meet">Meet the <span class="text-primary">Host</span></h2>
+                    <h2 class="section-title reveal" data-i18n="section-meet">Meet the <span class="text-primary">Host</span></h2>
                     
-                    <div class="about-grid">
+                    <div class="about-grid reveal">
                         <!-- Profile / Presenter Image Side -->
                         <div class="about-image-wrapper">
                             <!-- Robust Image Loading: Tries .jpg, then .png, then .jpeg, then placeholder -->
@@ -176,7 +189,7 @@
             <!-- Column 1: Brand & Bio -->
             <div class="footer-col brand-col">
                 <div class="footer-logo">
-                    <span class="logo-rabi">Rabi</span><span class="logo-bytes">Bytes</span>
+                    <span class="logo-text"><span class="logo-rabi">Rabi</span><span class="logo-bytes">Bytes</span></span>
                 </div>
                 <p class="footer-desc" data-i18n="footer-desc">
                     Bridging the gap between academic theory and real-world production systems.
